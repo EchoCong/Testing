@@ -1,0 +1,75 @@
+<project name="Ant" default="run_program" basedir=".">
+
+	<!-- Define Name -->
+    <property name="src_program_echo" value="Echo/source_code"/>
+    <property name="src_program_aosen" value="Aosen/source_code"/>
+    <property name="src_program_lisa" value="Lisa/source_code"/>
+    <property name="src_program_sky" value="Sky/source_code"/>
+
+    <property name="src_fuzz_echo" value="Echo/customed_fuzzer"/>
+    <property name="src_fuzz_lisa" value="Lisa/customed_fuzzer"/>
+    <property name="src_fuzz_aosen" value="Aosen/customed_fuzzer"/>
+    <property name="src_fuzz_sky" value="Sky/customed_fuzzer"/>
+
+
+    <property name="des_echo" value="classes/classes_echo"/>
+    <property name="des_aosen" value="classes/classes_aosen"/>
+    <property name="des_lisa" value="classes/classes_lisa"/>
+    <property name="des_sky" value="classes/classes_sky"/>
+
+	<!-- Initial Dir -->
+    <target name="init">
+        <mkdir dir="${des_echo}"/>
+        <mkdir dir="${des_aosen}"/>
+        <mkdir dir="${des_lisa}"/>
+        <mkdir dir="${des_sky}"/>
+    </target>
+
+    <!-- Compile -->
+    <target name="compile" depends="init">
+        <javac destdir="${des_echo}" includeantruntime="false">
+		    <src path="${src_program_echo}"/>
+		    <src path="${src_fuzz_echo}"/>
+		</javac>
+		<javac destdir="${des_aosen}" includeantruntime="false">
+		    <src path="${src_program_aosen}"/>
+		    <src path="${src_fuzz_aosen}"/>
+		</javac>
+		<javac destdir="${des_lisa}" includeantruntime="false">
+		    <src path="${src_program_lisa}"/>
+		    <src path="${src_fuzz_lisa}"/>
+		</javac>
+		<javac destdir="${des_sky}" includeantruntime="false">
+		    <src path="${src_program_sky}"/>
+		    <src path="${src_fuzz_sky}"/>
+		</javac>
+
+    </target>
+
+    <!-- Run -->
+
+    <target name="run_program" depends="compile">
+        <java classname="classes_echo.SimpleDriver" classpath="classes/classes_echo"/>
+        <java classname="classes_aosen.CaesarCipher" classpath="classes/classes_aosen"/>
+        <java classname="classes_lisa.Cipher" classpath="classes/classes_lisa"/>
+        <java classname="classes_sky.Base64Decoder" classpath="classes/classes_sky"/>
+    </target>
+
+    <target name="run_fuzzer" depends="compile">
+    	<java classname="classes_echo.Fuzzer" classpath="classes/classes_echo"/>
+    	<java classname="classes_aosen.FuzzC" classpath="classes/classes_aosen"/>
+    	<java classname="classes_aosen.FuzzH" classpath="classes/classes_aosen"/>
+    	<java classname="classes_aosen.FuzzQ" classpath="classes/classes_aosen"/>
+		<java classname="classes_lisa.Fuzzer" classpath="classes/classes_lisa"/>
+        <java classname="classes_sky.Fuzzer" classpath="classes/classes_sky"/>
+    </target>
+
+    <!-- Clean -->
+    <target name="clean">
+        <delete dir="${des_echo}"/>
+        <delete dir="${des_aosen}"/>
+        <delete dir="${des_lisa}"/>
+        <delete dir="${des_sky}"/>
+    </target>
+
+</project>
